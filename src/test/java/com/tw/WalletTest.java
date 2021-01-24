@@ -5,9 +5,6 @@ import com.tw.exceptions.NegativeValueException;
 import com.tw.exceptions.ZeroValueException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +15,8 @@ public class WalletTest {
     @Test
     void shouldReturnSpecifiedAmountOfMoneyFromWallet() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
         Money fiveRupee = Money.createRupee(5);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(fiveRupee);
 
         Money twoRupee = Money.createRupee(2);
         Money withdrawnMoney = wallet.withdraw(twoRupee);
@@ -27,10 +25,12 @@ public class WalletTest {
 
     }
 
+
     @Test
     void shouldReflectChangeInWalletMoneyAfterWithdrawing() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
         Money fiveRupee = Money.createRupee(5);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(fiveRupee);
 
         Money twoRupee = Money.createRupee(2);
         wallet.withdraw(twoRupee);
@@ -44,7 +44,8 @@ public class WalletTest {
     @Test
     void shouldNotBeAbleToWithdrawAmountMoreThanWalletTotalMoney() throws NegativeValueException, ZeroValueException {
         Money fiveRupee = Money.createRupee(5);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(fiveRupee);
 
         Money sevenRupee = Money.createRupee(7);
         assertThrows(InsufficientMoneyException.class, () -> wallet.withdraw(sevenRupee));
@@ -54,7 +55,8 @@ public class WalletTest {
     @Test
     void shouldNotBeAbleToWithdrawZeroValuedAmount() throws NegativeValueException, ZeroValueException {
         Money fiveRupee = Money.createRupee(5);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(fiveRupee);
 
         Money zeroRupee = Money.createRupee(0);
         assertThrows(ZeroValueException.class, () -> wallet.withdraw(zeroRupee));
@@ -64,7 +66,9 @@ public class WalletTest {
     void shouldReturnCorrectTotalAmountOfWalletMoneyInRupees() throws NegativeValueException, ZeroValueException {
         Money fiftyRupee = Money.createRupee(50);
         Money oneDollar = Money.createDollar(1);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiftyRupee, oneDollar)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(fiftyRupee);
+        wallet.deposit(oneDollar);
 
         Money totalAmount = wallet.totalAmount(Currency.RUPEE);
 
@@ -74,10 +78,13 @@ public class WalletTest {
 
     @Test
     void shouldReturnCorrectTotalAmountOfWalletMoneyInDollars() throws NegativeValueException, ZeroValueException {
-        Money oneRupee = Money.createRupee(74.85);
-        Money woneRupee = Money.createRupee(149.7);
+        Money aRupee = Money.createRupee(74.85);
+        Money anotherRupee = Money.createRupee(149.7);
         Money oneDollar = Money.createDollar(1);
-        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(oneRupee, oneDollar, woneRupee)));
+        Wallet wallet = new Wallet();
+        wallet.deposit(aRupee);
+        wallet.deposit(anotherRupee);
+        wallet.deposit(oneDollar);
 
         Money totalAmount = wallet.totalAmount(Currency.DOLLAR);
 

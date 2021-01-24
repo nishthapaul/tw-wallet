@@ -4,17 +4,12 @@ import com.tw.exceptions.InsufficientMoneyException;
 import com.tw.exceptions.NegativeValueException;
 import com.tw.exceptions.ZeroValueException;
 
-import java.util.List;
-
 public class Wallet {
 
     private Money money;
 
-    public Wallet(List<Money> moneyList) throws NegativeValueException, ZeroValueException {
+    public Wallet() throws NegativeValueException {
         money = Money.createRupee(0);
-        for (Money m : moneyList) {
-            money = money.add(m);
-        }
     }
 
     public Money withdraw(Money other) throws InsufficientMoneyException, ZeroValueException {
@@ -22,8 +17,11 @@ public class Wallet {
         return other;
     }
 
+    public void deposit(Money other) throws ZeroValueException {
+        money = money.add(other);
+    }
+
     public Money totalAmount(Currency currency) {
         return money.convertTo(currency);
     }
-
 }
