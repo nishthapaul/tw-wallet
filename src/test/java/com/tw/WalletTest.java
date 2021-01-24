@@ -5,55 +5,84 @@ import com.tw.exceptions.NegativeValueException;
 import com.tw.exceptions.ZeroValueException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WalletTest {
-    @Test
-    void shouldReturnSpecifiedAmountOfMoneyFromWallet_IfTheRequestedAmountIsLessThanOrEqualToWalletMoney() {
-        Wallet wallet = new Wallet(5);
 
-        try {
-            int amountWithdrawn = wallet.withdraw(2);
-            assertThat(amountWithdrawn, is(equalTo(2)));
-        } catch (ZeroValueException | NegativeValueException | InsufficientMoneyException e) {
-            System.out.println(e);
-        }
+    @Test
+    void shouldReturnSpecifiedAmountOfMoneyFromWallet() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
+        Money fiveRupee = Money.createRupee(5);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+
+        Money twoRupee = Money.createRupee(2);
+        Money withdrawnMoney = wallet.withdraw(twoRupee);
+
+        assertThat(withdrawnMoney, is(equalTo(twoRupee)));
+
     }
 
     @Test
-    void shouldReflectChangeInWalletMoneyAfterWithdrawing() {
-        Wallet wallet = new Wallet(5);
+    void shouldReflectChangeInWalletMoneyAfterWithdrawing() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
+        Money fiveRupee = Money.createRupee(5);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
 
-        try {
-            int amountWithdrawn = wallet.withdraw(2);
-            assertThat(wallet.totalAmount(), is(equalTo(5 - amountWithdrawn)));
-        } catch (ZeroValueException | NegativeValueException | InsufficientMoneyException e) {
-            System.out.println(e);
-        }
+        Money twoRupee = Money.createRupee(2);
+        wallet.withdraw(twoRupee);
+
+        Money totalAmount = wallet.totalAmount(Currency.RUPEE);
+        Money threeRupee = Money.createRupee(3);
+        assertThat(totalAmount, is(equalTo(threeRupee)));
+
     }
 
     @Test
-    void shouldNotBeAbleToWithdrawAmountMoreThanWalletTotalMoney() {
-        Wallet wallet = new Wallet(5);
+    void shouldNotBeAbleToWithdrawAmountMoreThanWalletTotalMoney() throws NegativeValueException, ZeroValueException {
+        Money fiveRupee = Money.createRupee(5);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
 
-        assertThrows(InsufficientMoneyException.class, () -> wallet.withdraw(7));
+        Money sevenRupee = Money.createRupee(7);
+        assertThrows(InsufficientMoneyException.class, () -> wallet.withdraw(sevenRupee));
+    }
+
+
+    @Test
+    void shouldNotBeAbleToWithdrawZeroValuedAmount() throws NegativeValueException, ZeroValueException {
+        Money fiveRupee = Money.createRupee(5);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiveRupee)));
+
+        Money zeroRupee = Money.createRupee(0);
+        assertThrows(ZeroValueException.class, () -> wallet.withdraw(zeroRupee));
     }
 
     @Test
-    void shouldNotBeAbleToWithdrawZeroValuedAmount() {
-        Wallet wallet = new Wallet(5);
+    void shouldReturnCorrectTotalAmountOfWalletMoneyInRupees() throws NegativeValueException, ZeroValueException {
+        Money fiftyRupee = Money.createRupee(50);
+        Money oneDollar = Money.createDollar(1);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(fiftyRupee, oneDollar)));
 
-        assertThrows(ZeroValueException.class, () -> wallet.withdraw(0));
+        Money totalAmount = wallet.totalAmount(Currency.RUPEE);
+
+        assertThat(totalAmount, is(equalTo(Money.createRupee(124.85))));
+
     }
 
     @Test
-    void shouldNotBeAbleToWithdrawNegativeValuedAmount() {
-        Wallet wallet = new Wallet(5);
+    void shouldReturnCorrectTotalAmountOfWalletMoneyInDollars() throws NegativeValueException, ZeroValueException {
+        Money oneRupee = Money.createRupee(74.85);
+        Money woneRupee = Money.createRupee(149.7);
+        Money oneDollar = Money.createDollar(1);
+        Wallet wallet = new Wallet(new ArrayList<>(Arrays.asList(oneRupee, oneDollar, woneRupee)));
 
-        assertThrows(NegativeValueException.class, () -> wallet.withdraw(-2));
+        Money totalAmount = wallet.totalAmount(Currency.DOLLAR);
+
+        assertThat(totalAmount, is(equalTo(Money.createDollar(4))));
+
     }
 
 }
