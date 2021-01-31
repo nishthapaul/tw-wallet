@@ -13,37 +13,48 @@ public class Money {
         this.value = value;
     }
 
-    public static Money createRupee(double value) throws NegativeValueException {
+    public static Money createRupee(double value) throws NegativeValueException, ZeroValueException {
+        if (value == 0) {
+            throw new ZeroValueException();
+        }
         if (value < 0) {
             throw new NegativeValueException();
         }
         return new Money(Currency.RUPEE, value);
     }
 
-    public static Money createDollar(double value) throws NegativeValueException {
+    public static Money createDollar(double value) throws NegativeValueException, ZeroValueException {
+        if (value == 0) {
+            throw new ZeroValueException();
+        }
         if (value < 0) {
             throw new NegativeValueException();
         }
         return new Money(Currency.DOLLAR, value);
     }
 
-    public Money add(Money otherMoney) throws ZeroValueException {
+    public Money add(Money otherMoney) {
         Money oneAddend = this.convertTo(Currency.RUPEE);
         Money secondAddend = otherMoney.convertTo(Currency.RUPEE);
-        if (secondAddend.value == 0) throw new ZeroValueException("deposit");
+
         oneAddend.value += secondAddend.value;
+
         return oneAddend.convertTo(this.currency);
     }
 
-    public Money subtract(Money otherMoney) throws InsufficientMoneyException, ZeroValueException {
+    public Money subtract(Money otherMoney) throws InsufficientMoneyException {
         Money oneAddend = this.convertTo(Currency.RUPEE);
-        System.out.println(oneAddend);
         Money secondAddend = otherMoney.convertTo(Currency.RUPEE);
-        System.out.println(otherMoney);
-        if (secondAddend.value > oneAddend.value) throw new InsufficientMoneyException();
-        if (secondAddend.value == 0) throw new ZeroValueException("withdraw");
+
+        if (oneAddend.isLessThan(secondAddend)) throw new InsufficientMoneyException();
+
         oneAddend.value -= secondAddend.value;
+
         return oneAddend.convertTo(this.currency);
+    }
+
+    public boolean isLessThan(Money money) {
+        return this.value < money.value;
     }
 
     public Money convertTo(Currency currency) {
