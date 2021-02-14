@@ -37,7 +37,7 @@ public class Money {
     }
 
     public boolean isLessThan(Money money) {
-        return this.value < money.value;
+        return this.value < money.currency.convertTo(this.currency, money.value);
     }
 
     public Money convertTo(Currency currency) {
@@ -63,7 +63,7 @@ public class Money {
             return false;
         }
         Money otherMoney = (Money) obj;
-        return this.currency == otherMoney.currency && Math.abs(this.value - otherMoney.value) < 0.001;
+        return this.currency == otherMoney.currency && Math.abs(this.value - otherMoney.value) < 0.01;
     }
 
 }
