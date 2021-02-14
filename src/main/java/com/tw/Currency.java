@@ -9,11 +9,19 @@ enum Currency {
         this.conversionFactor = conversionFactor;
     }
 
-    public double convertToBaseCurrency(double amount) {
+    public double convertTo(Currency currency, double amount) {
+        if(currency == RUPEE) {
+            return convertToBaseCurrency(amount);
+        } else {
+            return convertToNonBaseCurrency(currency, amount);
+        }
+    }
+
+    private double convertToBaseCurrency(double amount) {
         return amount * conversionFactor;
     }
 
-    public double convertToNonBaseCurrency(Currency currency, double amount) {
-        return amount / currency.conversionFactor;
+    private double convertToNonBaseCurrency(Currency currency, double amount) {
+        return amount * ( this.conversionFactor / currency.conversionFactor);
     }
 }
