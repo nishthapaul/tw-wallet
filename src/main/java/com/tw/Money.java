@@ -1,8 +1,7 @@
 package com.tw;
 
 import com.tw.exceptions.InsufficientMoneyException;
-import com.tw.exceptions.NegativeValueException;
-import com.tw.exceptions.ZeroValueException;
+import com.tw.exceptions.InvalidMoneyException;
 
 public class Money {
     private final Currency currency;
@@ -13,12 +12,9 @@ public class Money {
         this.value = value;
     }
 
-    public static Money createMoney(Currency currency, double value) throws NegativeValueException, ZeroValueException {
-        if (value == 0) {
-            throw new ZeroValueException();
-        }
-        if (value < 0) {
-            throw new NegativeValueException();
+    public static Money createMoney(Currency currency, double value) throws InvalidMoneyException {
+        if (value <= 0) {
+            throw new InvalidMoneyException(value);
         }
         return new Money(currency, value);
     }

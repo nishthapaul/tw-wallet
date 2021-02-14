@@ -1,8 +1,7 @@
 package com.tw;
 
 import com.tw.exceptions.InsufficientMoneyException;
-import com.tw.exceptions.NegativeValueException;
-import com.tw.exceptions.ZeroValueException;
+import com.tw.exceptions.InvalidMoneyException;
 import org.junit.jupiter.api.Test;
 
 import static com.tw.Money.createMoney;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class WalletTest {
 
     @Test
-    void shouldReturnSpecifiedAmountOfMoneyFromWallet() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
+    void shouldReturnSpecifiedAmountOfMoneyFromWallet() throws InsufficientMoneyException, InvalidMoneyException {
         Money fiveRupee = createMoney(Currency.RUPEE, 5);
         Wallet wallet = new Wallet();
         wallet.deposit(fiveRupee);
@@ -26,7 +25,7 @@ public class WalletTest {
     }
 
     @Test
-    void shouldReflectChangeInWalletMoneyAfterWithdrawing() throws NegativeValueException, InsufficientMoneyException, ZeroValueException {
+    void shouldReflectChangeInWalletMoneyAfterWithdrawing() throws InsufficientMoneyException, InvalidMoneyException {
         Money fiveRupee = createMoney(Currency.RUPEE, 5);
         Wallet wallet = new Wallet();
         wallet.deposit(fiveRupee);
@@ -40,7 +39,7 @@ public class WalletTest {
     }
 
     @Test
-    void shouldNotBeAbleToWithdrawAmountMoreThanWalletTotalMoney() throws NegativeValueException, ZeroValueException {
+    void shouldNotBeAbleToWithdrawAmountMoreThanWalletTotalMoney() throws InvalidMoneyException {
         Money fiveRupee = createMoney(Currency.RUPEE, 5);
         Wallet wallet = new Wallet();
         wallet.deposit(fiveRupee);
@@ -50,7 +49,7 @@ public class WalletTest {
     }
 
     @Test
-    void shouldReturnCorrectTotalAmountOfWalletMoneyInRupees() throws NegativeValueException, ZeroValueException {
+    void shouldReturnCorrectTotalAmountOfWalletMoneyInRupees() throws InvalidMoneyException {
         Money fiftyRupee = createMoney(Currency.RUPEE, 50);
         Money oneDollar = createMoney(Currency.DOLLAR, 1);
         Wallet wallet = new Wallet();
@@ -63,7 +62,7 @@ public class WalletTest {
     }
 
     @Test
-    void shouldReturnCorrectTotalAmountOfWalletMoneyInDollars() throws NegativeValueException, ZeroValueException {
+    void shouldReturnCorrectTotalAmountOfWalletMoneyInDollars() throws InvalidMoneyException {
         Money aRupee = createMoney(Currency.RUPEE, 74.85);
         Money anotherRupee = createMoney(Currency.RUPEE, 149.7);
         Money oneDollar = createMoney(Currency.DOLLAR, 1);

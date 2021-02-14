@@ -1,7 +1,6 @@
 package com.tw;
 
-import com.tw.exceptions.NegativeValueException;
-import com.tw.exceptions.ZeroValueException;
+import com.tw.exceptions.InvalidMoneyException;
 import org.junit.jupiter.api.Test;
 
 import static com.tw.Money.createMoney;
@@ -14,12 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MoneyTest {
 
     @Test
-    void shouldNotBeAbleToCreateNegativeValuedMoney() {
-        assertThrows(NegativeValueException.class, () -> createMoney(Currency.RUPEE, -5));
-    }
-
-    @Test
-    void convertRupeeToDollar() throws NegativeValueException, ZeroValueException {
+    void convertRupeeToDollar() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
         Money oneRupeeInDollars = createMoney(Currency.DOLLAR, 0.0133);
 
@@ -27,14 +21,14 @@ class MoneyTest {
     }
 
     @Test
-    void convertRupeeToRupee() throws NegativeValueException, ZeroValueException {
+    void convertRupeeToRupee() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
 
         assertThat(oneRupee.convertTo(Currency.RUPEE), is(equalTo(oneRupee)));
     }
 
     @Test
-    void convertDollarToRupee() throws NegativeValueException, ZeroValueException {
+    void convertDollarToRupee() throws InvalidMoneyException {
         Money oneDollar = createMoney(Currency.DOLLAR, 1);
         Money oneDollarInRupees = createMoney(Currency.RUPEE, 74.85);
 
@@ -42,14 +36,14 @@ class MoneyTest {
     }
 
     @Test
-    void convertDollarToDollar() throws NegativeValueException, ZeroValueException {
+    void convertDollarToDollar() throws InvalidMoneyException {
         Money oneDollar = createMoney(Currency.DOLLAR, 74.85);
 
         assertThat(oneDollar.convertTo(Currency.DOLLAR), is(equalTo(oneDollar)));
     }
 
     @Test
-    void addRupeeToDollar() throws NegativeValueException, ZeroValueException {
+    void addRupeeToDollar() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
         Money oneDollar = createMoney(Currency.DOLLAR, 1);
 
@@ -59,7 +53,7 @@ class MoneyTest {
     }
 
     @Test
-    void addRupeeToRupee() throws NegativeValueException, ZeroValueException {
+    void addRupeeToRupee() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
         Money tenRupee = createMoney(Currency.RUPEE, 10);
 
@@ -69,7 +63,7 @@ class MoneyTest {
     }
 
     @Test
-    void addDollarToRupee() throws NegativeValueException, ZeroValueException {
+    void addDollarToRupee() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
         Money oneDollar = createMoney(Currency.DOLLAR, 1);
 
@@ -79,12 +73,17 @@ class MoneyTest {
     }
 
     @Test
-    void shouldThrowExceptionWhileCreatingZeroValuedMoney() {
-        assertThrows(ZeroValueException.class, () -> createMoney(Currency.RUPEE, 0));
+    void shouldNotBeAbleToCreateNegativeValuedMoney() {
+        assertThrows(InvalidMoneyException.class, () -> createMoney(Currency.RUPEE, -5));
     }
 
     @Test
-    void shouldGiveTrueWhenOneRupeeIsLessThanTwoRupee() throws ZeroValueException, NegativeValueException {
+    void shouldThrowExceptionWhileCreatingZeroValuedMoney() {
+        assertThrows(InvalidMoneyException.class, () -> createMoney(Currency.RUPEE, 0));
+    }
+
+    @Test
+    void shouldGiveTrueWhenOneRupeeIsLessThanTwoRupee() throws InvalidMoneyException {
         Money oneRupee = createMoney(Currency.RUPEE, 1);
         Money twoRupee = createMoney(Currency.RUPEE, 2);
 
