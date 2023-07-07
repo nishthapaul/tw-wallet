@@ -1,7 +1,7 @@
 package com.tw;
 
 enum Currency {
-    RUPEE(1), DOLLAR(74.85), YEN(0.7);
+    RUPEE(1), DOLLAR(74.85);
 
     private final double conversionFactor;
 

@@ -76,4 +76,11 @@ public class WalletTest {
         assertThat(totalAmount, is(equalTo(createMoney(Currency.DOLLAR, 4))));
     }
 
+    @Test
+    void shouldGiveZeroAmount() {
+        Wallet wallet = new Wallet();
+
+        wallet.totalAmount(Currency.RUPEE); // gives NullPointerException
+    }
+
 }

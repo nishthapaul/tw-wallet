@@ -5,9 +5,9 @@ import com.tw.exceptions.InvalidMoneyException;
 
 public class Money {
     private final Currency currency;
-    private double value;
+    private final double value;
 
-    private Money(Currency currency, double value) {
+    public Money(Currency currency, double value) {
         this.currency = currency;
         this.value = value;
     }
@@ -24,7 +24,7 @@ public class Money {
 
         this.value += convertedMoney.value;
 
-        return this;
+        return new ;
     }
 
     public Money subtract(Money money) throws InsufficientMoneyException {

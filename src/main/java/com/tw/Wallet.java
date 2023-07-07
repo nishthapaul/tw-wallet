@@ -28,7 +28,7 @@ public class Wallet {
         }
     }
 
-    public Money totalAmount(Currency currency) {
+    public Money totalAmount(Currency currency) { // throw exception
         return money.convertTo(currency);
     }
 }
